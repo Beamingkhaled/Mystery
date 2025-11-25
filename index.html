@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystery Pot Card Game</title>
+    <title>Mystery Pot - Card Game</title>
     <style>
         * {
             margin: 0;
@@ -12,418 +11,190 @@
             box-sizing: border-box;
         }
 
-```
-    body {
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        padding: 20px;
-    }
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
 
-    .game-container {
-        width: 100%;
-        max-width: 1200px;
-        text-align: center;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Arial Black", Arial, sans-serif;
+            /* 👉 Set this to the EXACT filename of the mockup you liked */
+            background: #000 url("mystery-layout.jpg") no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            color: #fff;
+        }
 
-    /* Top Section - Pot Display */
-    .pot-section {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 30px;
-        margin-bottom: 40px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
+        /* Dark overlay to make text readable if the image is bright */
+        .overlay {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
 
-    .pot-title {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-    }
+        /* POT text – adjust top/letter-spacing to match your photo */
+        .pot-display {
+            position: absolute;
+            top: 4vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4.5rem;
+            letter-spacing: 4px;
+            font-weight: 900;
+            color: #FDB813;
+            text-shadow:
+                0 0 12px rgba(0, 0, 0, 0.9),
+                0 10px 25px rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
 
-    .pot-value {
-        font-size: 4rem;
-        font-weight: bold;
-        color: #ffd700;
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        animation: pulse 2s ease-in-out infinite;
-    }
+        /* Container sitting over the main uncovered card */
+        .card-overlay {
+            position: absolute;
+            /* 🔧 Move these values to sit perfectly over the card on your image */
+            left: 50%;
+            top: 48%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none; /* We don't need clicks here on live */
+        }
 
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
+        .creature-emoji {
+            font-size: 6rem;
+            text-shadow:
+                0 0 12px rgba(0, 0, 0, 0.8),
+                0 10px 20px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+        }
 
-    .deck-info {
-        margin-top: 15px;
-        font-size: 1.2rem;
-        opacity: 0.9;
-    }
-
-    /* Card Display Section */
-    .card-section {
-        perspective: 1000px;
-        margin-bottom: 30px;
-    }
-
-    .card {
-        width: 100%;
-        max-width: 500px;
-        height: 600px;
-        margin: 0 auto;
-        position: relative;
-        transform-style: preserve-3d;
-        transition: transform 0.6s;
-    }
-
-    .card.flip {
-        animation: flipCard 0.6s ease-in-out;
-    }
-
-    @keyframes flipCard {
-        0% { transform: rotateY(0deg); }
-        50% { transform: rotateY(90deg); }
-        100% { transform: rotateY(0deg); }
-    }
-
-    .card-inner {
-        width: 100%;
-        height: 100%;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        padding: 30px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .card-inner::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        z-index: 0;
-    }
-
-    .card-content {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-    }
-
-    .card-type-badge {
-        display: inline-block;
-        padding: 10px 25px;
-        border-radius: 30px;
-        font-weight: bold;
-        font-size: 1rem;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    .badge-item {
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        color: #333;
-    }
-
-    .badge-challenge {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-        color: white;
-    }
-
-    .card-image {
-        width: 100%;
-        max-width: 350px;
-        height: 250px;
-        object-fit: cover;
-        border-radius: 15px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-title {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 15px;
-        line-height: 1.2;
-    }
-
-    .card-coins {
-        font-size: 3rem;
-        font-weight: bold;
-        color: #ffd700;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-description {
-        font-size: 1.2rem;
-        color: #666;
-        margin-bottom: 15px;
-    }
-
-    .card-challenge-text {
-        font-size: 1.8rem;
-        color: #333;
-        line-height: 1.4;
-        padding: 20px;
-        background: rgba(255, 107, 107, 0.1);
-        border-radius: 15px;
-    }
-
-    /* Waiting State */
-    .waiting-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        color: #999;
-    }
-
-    .waiting-icon {
-        font-size: 6rem;
-        margin-bottom: 20px;
-        animation: bounce 2s ease-in-out infinite;
-    }
-
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-20px); }
-    }
-
-    .waiting-text {
-        font-size: 2rem;
-        color: #666;
-    }
-
-    /* Recent Cards Log */
-    .recent-cards {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 20px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .recent-cards h3 {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        opacity: 0.9;
-    }
-
-    .recent-cards-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-    }
-
-    .recent-card-item {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 8px 15px;
-        border-radius: 10px;
-        font-size: 0.9rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .pot-value {
+        .card-name {
             font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #000;
+            padding: 5px 18px;
+            border-radius: 10px;
+            background: rgba(255, 215, 0, 0.9); /* matches the yellow box feel */
+            border: 4px solid #000;
+            text-shadow: none;
+            margin-bottom: 16px;
         }
 
-        .card {
-            max-width: 350px;
-            height: 500px;
+        .card-value-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .card-title {
-            font-size: 1.8rem;
+        .coin-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fffdd0, #f8c400 45%, #a87500 80%);
+            border: 5px solid #000;
+            box-shadow:
+                0 3px 0 #000,
+                0 0 10px rgba(0, 0, 0, 0.7);
         }
 
-        .card-coins {
-            font-size: 2.2rem;
+        .card-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #000;
+            padding: 4px 16px;
+            border-radius: 10px;
+            background: rgba(255, 215, 0, 0.9);
+            border: 4px solid #000;
+            text-shadow: none;
         }
 
-        .card-challenge-text {
-            font-size: 1.4rem;
-        }
-    }
-</style>
-```
+        /* Make sure it looks good on TikTok portrait */
+        @media (max-width: 768px) {
+            .pot-display {
+                font-size: 3rem;
+                top: 3vh;
+            }
 
+            .card-overlay {
+                top: 52%;
+            }
+
+            .creature-emoji {
+                font-size: 4rem;
+            }
+
+            .card-name {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+
+            .card-value {
+                font-size: 2.3rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Pot Section -->
-        <div class="pot-section">
-            <div class="pot-title">🎁 Mystery Pot 🎁</div>
-            <div class="pot-value" id="potValue">0 coins</div>
-            <div class="deck-info" id="deckInfo">Cards left: 0/0</div>
-        </div>
+    <div class="overlay">
+        <!-- POT text at the top -->
+        <div class="pot-display" id="potDisplay">POT 1,000</div>
 
-```
-    <!-- Card Display -->
-    <div class="card-section">
-        <div class="card" id="card">
-            <div class="card-inner">
-                <div class="card-content" id="cardContent">
-                    <div class="waiting-state">
-                        <div class="waiting-icon">🎴</div>
-                        <div class="waiting-text">Waiting for the next card...</div>
-                    </div>
-                </div>
+        <!-- Dynamic content for the uncovered card on your mockup -->
+        <div class="card-overlay">
+            <div class="creature-emoji" id="creatureEmoji">🦎</div>
+            <div class="card-name" id="cardName">LIZARD</div>
+            <div class="card-value-row">
+                <div class="coin-icon"></div>
+                <div class="card-value" id="cardValue">200</div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Cards Log -->
-    <div class="recent-cards" id="recentCards" style="display: none;">
-        <h3>Recent Cards</h3>
-        <div class="recent-cards-list" id="recentCardsList"></div>
-    </div>
-</div>
+    <script>
+        // ===== JSONBin CONFIG =====
+        // Example: front-end URL like: https://username.github.io/game/?bin=66xxxx
+        const urlParams = new URLSearchParams(window.location.search);
+        const BIN_ID = urlParams.get('bin') || 'YOUR_BIN_ID_HERE'; // <-- you can hardcode if you want
+        const API_ENDPOINT = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
-<script>
-    // Configuration
-    const UPDATE_INTERVAL = 2000; // Check for updates every 2 seconds
-    const STATE_KEY = 'mysteryPotGameState';
-    const STATE_URL = 'gameState.json'; // Fallback to JSON file if available
+        // Poll every 2 seconds for live updates
+        setInterval(fetchGameState, 2000);
+        fetchGameState();
 
-    let lastUpdateTime = 0;
+        async function fetchGameState() {
+            try {
+                const response = await fetch(API_ENDPOINT);
+                const json = await response.json();
+                const data = json.record;
 
-    // Initialize
-    updateDisplay();
-    setInterval(checkForUpdates, UPDATE_INTERVAL);
-
-    // Check for updates from multiple sources
-    async function checkForUpdates() {
-        try {
-            // First try to get state from localStorage (for same-origin testing)
-            const localState = localStorage.getItem(STATE_KEY);
-            if (localState) {
-                const state = JSON.parse(localState);
-                if (state.lastUpdated && state.lastUpdated > lastUpdateTime) {
-                    lastUpdateTime = state.lastUpdated;
-                    updateDisplay(state);
-                    return;
+                // POT
+                if (typeof data.pot === 'number') {
+                    document.getElementById('potDisplay').textContent =
+                        `POT ${data.pot.toLocaleString()}`;
                 }
-            }
 
-            // Try to fetch from JSON file (for GitHub Pages deployment)
-            const response = await fetch(STATE_URL + '?t=' + Date.now());
-            if (response.ok) {
-                const state = await response.json();
-                if (state.lastUpdated && state.lastUpdated > lastUpdateTime) {
-                    lastUpdateTime = state.lastUpdated;
-                    updateDisplay(state);
+                // CARD
+                if (data.card) {
+                    updateCard(data.card);
                 }
-            }
-        } catch (error) {
-            // Silently fail - will retry on next interval
-            console.log('Waiting for game state...');
-        }
-    }
-
-    // Update the display with game state
-    function updateDisplay(state) {
-        if (!state) {
-            // Try to load from localStorage on initial load
-            const localState = localStorage.getItem(STATE_KEY);
-            if (localState) {
-                state = JSON.parse(localState);
-            } else {
-                return; // No state available yet
+            } catch (error) {
+                console.error('Error fetching game state:', error);
             }
         }
 
-        // Update pot value
-        const potElement = document.getElementById('potValue');
-        potElement.textContent = formatCoins(state.currentPot);
+        function updateCard(cardData) {
+            const emojiEl = document.getElementById('creatureEmoji');
+            const nameEl = document.getElementById('cardName');
+            const valueEl = document.getElementById('cardValue');
 
-        // Update deck info
-        const deckElement = document.getElementById('deckInfo');
-        const usedCards = state.deck.filter(c => c.used).length;
-        const totalCards = state.deck.filter(c => c.active).length;
-        const remainingCards = totalCards - usedCards;
-        deckElement.textContent = `Cards left: ${remainingCards}/${totalCards}`;
-
-        // Update current card
-        const cardElement = document.getElementById('card');
-        const cardContentElement = document.getElementById('cardContent');
-
-        if (state.currentCard) {
-            // Trigger flip animation
-            cardElement.classList.add('flip');
-            setTimeout(() => cardElement.classList.remove('flip'), 600);
-
-            const card = state.currentCard;
-            let html = '';
-
-            if (card.type === 'item') {
-                html = `
-                    <span class="card-type-badge badge-item">🎁 Prize Item</span>
-                    ${card.imageUrl ? `<img src="${card.imageUrl}" alt="${card.title}" class="card-image">` : ''}
-                    <div class="card-title">${card.title}</div>
-                    <div class="card-coins">${formatCoins(card.coins)}</div>
-                    ${card.description ? `<div class="card-description">${card.description}</div>` : ''}
-                `;
-            } else if (card.type === 'challenge') {
-                html = `
-                    <span class="card-type-badge badge-challenge">⚡ Challenge</span>
-                    <div class="card-challenge-text">${card.text}</div>
-                `;
-            }
-
-            cardContentElement.innerHTML = html;
-        } else {
-            // Show waiting state
-            cardContentElement.innerHTML = `
-                <div class="waiting-state">
-                    <div class="waiting-icon">🎴</div>
-                    <div class="waiting-text">Waiting for the next card...</div>
-                </div>
-            `;
+            emojiEl.textContent = cardData.emoji || '🦎';
+            nameEl.textContent = (cardData.name || 'LIZARD').toUpperCase();
+            valueEl.textContent = cardData.value != null ? cardData.value : '200';
         }
-
-        // Update recent cards
-        if (state.recentCards && state.recentCards.length > 0) {
-            const recentCardsSection = document.getElementById('recentCards');
-            const recentCardsList = document.getElementById('recentCardsList');
-            
-            recentCardsSection.style.display = 'block';
-            recentCardsList.innerHTML = state.recentCards
-                .slice(-5)
-                .reverse()
-                .map(card => `<div class="recent-card-item">${card.title || card.text.substring(0, 30) + '...'}</div>`)
-                .join('');
-        }
-    }
-
-    // Format coins with commas
-    function formatCoins(amount) {
-        return amount.toLocaleString() + ' coins';
-    }
-</script>
-```
-
+    </script>
 </body>
 </html>
