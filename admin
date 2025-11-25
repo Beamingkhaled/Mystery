@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Pot - Admin Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+        color: #333;
+    }
+
+    .admin-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        color: #667eea;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .section {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: #667eea;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+
+    /* Game Control Section */
+    .game-status {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .status-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .status-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 5px;
+    }
+
+    .status-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+    }
+
+    .btn-success {
+        background: #51cf66;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #40c057;
+    }
+
+    .btn-danger {
+        background: #ff6b6b;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #fa5252;
+    }
+
+    .btn-secondary {
+        background: #adb5bd;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #868e96;
+    }
+
+    /* Pot Control */
+    .pot-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .pot-display {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffd700;
+        padding: 10px 20px;
+        background: #333;
+        border-radius: 8px;
+        min-width: 200px;
+        text-align: center;
+    }
+
+    input[type="number"] {
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        width: 150px;
+    }
+
+    /* Current Card Display */
+    .current-card-display {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .current-card-display h4 {
+        margin-bottom: 10px;
+        color: #667eea;
+    }
+
+    .current-card-display p {
+        font-size: 1.1rem;
+        margin: 5px 0;
+    }
+
+    /* Card Management */
+    .card-form {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #495057;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    /* Card List */
+    .cards-list {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .card-item {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .card-item:hover {
+        border-color: #667eea;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    }
+
+    .card-item.used {
+        opacity: 0.5;
+        background: #f8f9fa;
+    }
+
+    .card-item.inactive {
+        opacity: 0.3;
+    }
+
+    .card-info {
+        flex: 1;
+    }
+
+    .card-type {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .type-item {
+        background: #ffd700;
+        color: #333;
+    }
+
+    .type-challenge {
+        background: #ff6b6b;
+        color: white;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 5px;
+    }
+
+    .btn-small {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Export/Import */
+    .data-management {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #fileInput {
+        display: none;
+    }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        color: #667eea;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #999;
+    }
+
+    .close-btn:hover {
+        color: #333;
+    }
+
+    /* Tabs */
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #868e96;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .button-group {
+            flex-direction: column;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        .pot-control {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    /* Alert */
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: none;
+    }
+
+    .alert.show {
+        display: block;
+    }
+
+    .alert-success {
+        background: #d3f9d8;
+        color: #2b8a3e;
+        border: 1px solid #8ce99a;
+    }
+
+    .alert-error {
+        background: #ffe3e3;
+        color: #c92a2a;
+        border: 1px solid #ffa8a8;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="admin-container">
+        <h1>🎮 Mystery Pot Game - Admin Control Panel</h1>
+
+```
+    <div id="alert" class="alert"></div>
+
+    <!-- Game Control Section -->
+    <div class="section">
+        <h2 class="section-title">🎯 Game Control</h2>
+        
+        <div class="game-status">
+            <div class="status-card">
+                <div class="status-label">Current Pot</div>
+                <div class="status-value" id="statusPot">0</div>
+            </div>
+            <div class="status-card">
+                <div class="status-label">Cards Remaining</div>
+                <div class="status-value" id="statusRemaining">0</div>
+            </div>
+            <div class="status-card">
+                <div class="status-label">Total Active Cards</div>
+                <div class="status-value" id="statusTotal">0</div>
+            </div>
+        </div>
+
+        <div class="current-card-display" id="currentCardDisplay">
+            <h4>Current Card Showing:</h4>
+            <p id="currentCardText">No card drawn yet</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="drawCard()">🎴 Draw Next Card</button>
+            <button class="btn-secondary" onclick="undoLastCard()">↶ Undo Last Card</button>
+            <button class="btn-danger" onclick="resetGame()">🔄 Reset/Shuffle Game</button>
+            <button class="btn-primary" onclick="exportState()">💾 Export Game State</button>
+        </div>
+
+        <h3 style="margin-top: 20px; margin-bottom: 10px;">Pot Control</h3>
+        <div class="pot-control">
+            <div class="pot-display" id="potDisplay">0 coins</div>
+            <button class="btn-success" onclick="adjustPot(100)">+100</button>
+            <button class="btn-success" onclick="adjustPot(500)">+500</button>
+            <button class="btn-success" onclick="adjustPot(1000)">+1000</button>
+            <button class="btn-danger" onclick="adjustPot(-100)">-100</button>
+            <button class="btn-danger" onclick="adjustPot(-500)">-500</button>
+            <button class="btn-danger" onclick="adjustPot(-1000)">-1000</button>
+            <input type="number" id="customPot" placeholder="Custom amount">
+            <button class="btn-primary" onclick="setCustomPot()">Set Pot</button>
+        </div>
+    </div>
+
+    <!-- Card Management Section -->
+    <div class="section">
+        <h2 class="section-title">🃏 Card Management</h2>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('allCards')">All Cards</button>
+            <button class="tab" onclick="switchTab('addCard')">Add New Card</button>
+            <button class="tab" onclick="switchTab('importExport')">Import/Export</button>
+        </div>
+
+        <!-- All Cards Tab -->
+        <div id="allCards" class="tab-content active">
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="searchCards" placeholder="Search cards..." oninput="filterCards()">
+            </div>
+            <div class="cards-list" id="cardsList"></div>
+        </div>
+
+        <!-- Add Card Tab -->
+        <div id="addCard" class="tab-content">
+            <div class="card-form">
+                <div class="form-group">
+                    <label>Card Type</label>
+                    <select id="newCardType" onchange="toggleCardFields()">
+                        <option value="item">Item Card</option>
+                        <option value="challenge">Challenge Card</option>
+                    </select>
+                </div>
+
+                <div id="itemFields">
+                    <div class="form-group">
+                        <label>Item Title *</label>
+                        <input type="text" id="newItemTitle" placeholder="e.g., Beach Chalet Day">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Coin Value *</label>
+                            <input type="number" id="newItemCoins" placeholder="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" id="newItemImage" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description (Optional)</label>
+                        <textarea id="newItemDescription" placeholder="Optional description..."></textarea>
+                    </div>
+                </div>
+
+                <div id="challengeFields" style="display: none;">
+                    <div class="form-group">
+                        <label>Challenge Text *</label>
+                        <textarea id="newChallengeText" placeholder="e.g., Send 20 taps fast!"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Category (Optional)</label>
+                        <select id="newChallengeCategory">
+                            <option value="">None</option>
+                            <option value="tap">Tap</option>
+                            <option value="gift">Gift</option>
+                            <option value="dm">DM</option>
+                            <option value="chat">Chat</option>
+                            <option value="guest">Guest</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="addNewCard()">➕ Add Card</button>
+            </div>
+        </div>
+
+        <!-- Import/Export Tab -->
+        <div id="importExport" class="tab-content">
+            <div class="data-management">
+                <button class="btn-primary" onclick="exportCards()">📥 Export Cards (JSON)</button>
+                <button class="btn-secondary" onclick="document.getElementById('fileInput').click()">📤 Import Cards (JSON)</button>
+                <input type="file" id="fileInput" accept=".json" onchange="importCards(event)">
+            </div>
+            <p style="margin-top: 15px; color: #666;">Export your cards to edit them offline, then import them back.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Card</h3>
+            <button class="close-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div id="editFormContainer"></div>
+    </div>
+</div>
+
+<script>
+    // Storage key
+    const STATE_KEY = 'mysteryPotGameState';
+    
+    // Initialize game state
+    let gameState = {
+        currentPot: 0,
+        currentCard: null,
+        deck: [],
+        recentCards: [],
+        lastUpdated: Date.now()
+    };
+
+    // Load state on startup
+    loadGameState();
+    updateUI();
+
+    // Tab switching
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+    }
+
+    // Toggle card type fields
+    function toggleCardFields() {
+        const type = document.getElementById('newCardType').value;
+        document.getElementById('itemFields').style.display = type === 'item' ? 'block' : 'none';
+        document.getElementById('challengeFields').style.display = type === 'challenge' ? 'block' : 'none';
+    }
+
+    // Load game state from localStorage
+    function loadGameState() {
+        const saved = localStorage.getItem(STATE_KEY);
+        if (saved) {
+            gameState = JSON.parse(saved);
+        } else {
+            // Initialize with sample cards
+            initializeSampleCards();
+        }
+    }
+
+    // Save game state to localStorage
+    function saveGameState() {
+        gameState.lastUpdated = Date.now();
+        localStorage.setItem(STATE_KEY, JSON.stringify(gameState));
+        updateUI();
+    }
+
+    // Initialize with sample cards
+    function initializeSampleCards() {
+        gameState.deck = [
+            // Sample item cards
+            { id: generateId(), type: 'item', title: 'G-Tour Car', coins: 100, description: 'Toy racing car', imageUrl: '', active: true, used: false },
+            { id: generateId(), type: 'item', title: 'Beach Chalet Day', coins: 1000, description: 'Day pass to beach resort', imageUrl: '', active: true, used: false },
+            { id: generateId(), type: 'item', title: 'New iPhone', coins: 50000, description: 'Latest model', imageUrl: '', active: true, used: false },
+            { id: generateId(), type: 'item', title: 'Luxury Vacation', coins: 100000, description: 'Week-long trip', imageUrl: '', active: true, used: false },
+            // Sample challenge cards
+            { id: generateId(), type: 'challenge', text: 'Send 20 taps fast!', category: 'tap', active: true, used: false },
+            { id: generateId(), type: 'challenge', text: 'Send the smallest gift you can', category: 'gift', active: true, used: false },
+            { id: generateId(), type: 'challenge', text: 'Screenshot the live and DM it to the host', category: 'dm', active: true, used: false },
+            { id: generateId(), type: 'challenge', text: 'Spam 🔥🔥🔥 for 5 seconds in chat', category: 'chat', active: true, used: false },
+            { id: generateId(), type: 'challenge', text: 'Join as guest and say hi!', category: 'guest', active: true, used: false }
+        ];
+        saveGameState();
+    }
+
+    // Generate unique ID
+    function generateId() {
+        return 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Update UI
+    function updateUI() {
+        // Update status cards
+        const activeCards = gameState.deck.filter(c => c.active);
+        const usedCards = activeCards.filter(c => c.used);
+        const remainingCards = activeCards.length - usedCards.length;
+
+        document.getElementById('statusPot').textContent = gameState.currentPot.toLocaleString();
+        document.getElementById('statusRemaining').textContent = remainingCards;
+        document.getElementById('statusTotal').textContent = activeCards.length;
+        document.getElementById('potDisplay').textContent = gameState.currentPot.toLocaleString() + ' coins';
+
+        // Update current card display
+        if (gameState.currentCard) {
+            const card = gameState.currentCard;
+            let display = '';
+            if (card.type === 'item') {
+                display = `<strong>${card.title}</strong> - ${card.coins.toLocaleString()} coins`;
+            } else {
+                display = `<strong>Challenge:</strong> ${card.text}`;
+            }
+            document.getElementById('currentCardText').innerHTML = display;
+        } else {
+            document.getElementById('currentCardText').textContent = 'No card drawn yet';
+        }
+
+        // Update cards list
+        renderCardsList();
+    }
+
+    // Render cards list
+    function renderCardsList() {
+        const container = document.getElementById('cardsList');
+        const searchTerm = document.getElementById('searchCards').value.toLowerCase();
+        
+        let html = '';
+        gameState.deck.forEach(card => {
+            // Filter by search
+            const searchText = card.type === 'item' ? card.title : card.text;
+            if (searchTerm && !searchText.toLowerCase().includes(searchTerm)) {
+                return;
+            }
+
+            const classes = ['card-item'];
+            if (card.used) classes.push('used');
+            if (!card.active) classes.push('inactive');
+
+            const typeClass = card.type === 'item' ? 'type-item' : 'type-challenge';
+            const typeName = card.type === 'item' ? '🎁 Item' : '⚡ Challenge';
+            
+            let cardDisplay = '';
+            if (card.type === 'item') {
+                cardDisplay = `<strong>${card.title}</strong> - ${card.coins.toLocaleString()} coins`;
+            } else {
+                cardDisplay = `<strong>${card.text}</strong>`;
+            }
+
+            html += `
+                <div class="${classes.join(' ')}">
+                    <div class="card-info">
+                        <span class="card-type ${typeClass}">${typeName}</span>
+                        <div>${cardDisplay}</div>
+                        ${card.used ? '<small style="color: #999;">✓ Used this session</small>' : ''}
+                        ${!card.active ? '<small style="color: #999;">✗ Inactive</small>' : ''}
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-primary btn-small" onclick="editCard('${card.id}')">Edit</button>
+                        <button class="btn-secondary btn-small" onclick="toggleActive('${card.id}')">${card.active ? 'Disable' : 'Enable'}</button>
+                        <button class="btn-danger btn-small" onclick="deleteCard('${card.id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html || '<p style="text-align: center; color: #999;">No cards found</p>';
+    }
+
+    // Filter cards
+    function filterCards() {
+        renderCardsList();
+    }
+
+    // Draw next card
+    function drawCard() {
+        const availableCards = gameState.deck.filter(c => c.active && !c.used);
+        
+        if (availableCards.length === 0) {
+            showAlert('No cards left! Please reset the game.', 'error');
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * availableCards.length);
+        const drawnCard = availableCards[randomIndex];
+        
+        // Mark as used
+        const cardIndex = gameState.deck.findIndex(c => c.id === drawnCard.id);
+        gameState.deck[cardIndex].used = true;
+        
+        // Set as current card
+        gameState.currentCard = drawnCard;
+        
+        // Add to recent cards
+        if (!gameState.recentCards) gameState.recentCards = [];
+        gameState.recentCards.push(drawnCard);
+        if (gameState.recentCards.length > 10) {
+            gameState.recentCards.shift();
+        }
+        
+        saveGameState();
+        showAlert('Card drawn successfully!', 'success');
+    }
+
+    // Undo last card
+    function undoLastCard() {
+        if (!gameState.currentCard) {
+            showAlert('No card to undo', 'error');
+            return;
+        }
+
+        if (confirm('Are you sure you want to undo the last card? This will mark it as unused again.')) {
+            const cardIndex = gameState.deck.findIndex(c => c.id === gameState.currentCard.id);
+            if (cardIndex !== -1) {
+                gameState.deck[cardIndex].used = false;
+            }
+            
+            if (gameState.recentCards && gameState.recentCards.length > 0) {
+                gameState.recentCards.pop();
+                gameState.currentCard = gameState.recentCards[gameState.recentCards.length - 1] || null;
+            } else {
+                gameState.currentCard = null;
+            }
+            
+            saveGameState();
+            showAlert('Card undone successfully!', 'success');
+        }
+    }
+
+    // Reset game
+    function resetGame() {
+        if (confirm('Reset and shuffle the game? This will mark all cards as unused and clear the current card.')) {
+            // Mark all cards as unused
+            gameState.deck.forEach(card => card.used = false);
+            gameState.currentCard = null;
+            gameState.recentCards = [];
+            
+            // Optionally reset pot
+            if (confirm('Also reset the pot to 0?')) {
+                gameState.currentPot = 0;
+            }
+            
+            saveGameState();
+            showAlert('Game reset and shuffled!', 'success');
+        }
+    }
+
+    // Adjust pot
+    function adjustPot(amount) {
+        gameState.currentPot = Math.max(0, gameState.currentPot + amount);
+        saveGameState();
+    }
+
+    // Set custom pot
+    function setCustomPot() {
+        const value = parseInt(document.getElementById('customPot').value);
+        if (isNaN(value) || value < 0) {
+            showAlert('Please enter a valid number', 'error');
+            return;
+        }
+        gameState.currentPot = value;
+        document.getElementById('customPot').value = '';
+        saveGameState();
+    }
+
+    // Add new card
+    function addNewCard() {
+        const type = document.getElementById('newCardType').value;
+        
+        let card = {
+            id: generateId(),
+            type: type,
+            active: true,
+            used: false
+        };
+
+        if (type === 'item') {
+            const title = document.getElementById('newItemTitle').value.trim();
+            const coins = parseInt(document.getElementById('newItemCoins').value);
+            
+            if (!title || isNaN(coins)) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            card.title = title;
+            card.coins = coins;
+            card.description = document.getElementById('newItemDescription').value.trim();
+            card.imageUrl = document.getElementById('newItemImage').value.trim();
+            
+            // Clear form
+            document.getElementById('newItemTitle').value = '';
+            document.getElementById('newItemCoins').value = '';
+            document.getElementById('newItemDescription').value = '';
+            document.getElementById('newItemImage').value = '';
+        } else {
+            const text = document.getElementById('newChallengeText').value.trim();
+            
+            if (!text) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            card.text = text;
+            card.category = document.getElementById('newChallengeCategory').value;
+            
+            // Clear form
+            document.getElementById('newChallengeText').value = '';
+            document.getElementById('newChallengeCategory').value = '';
+        }
+
+        gameState.deck.push(card);
+        saveGameState();
+        showAlert('Card added successfully!', 'success');
+        switchTab('allCards');
+        document.querySelector('.tab').click();
+    }
+
+    // Edit card
+    function editCard(cardId) {
+        const card = gameState.deck.find(c => c.id === cardId);
+        if (!card) return;
+
+        let formHtml = '';
+        if (card.type === 'item') {
+            formHtml = `
+                <div class="form-group">
+                    <label>Item Title</label>
+                    <input type="text" id="editTitle" value="${card.title}">
+                </div>
+                <div class="form-group">
+                    <label>Coin Value</label>
+                    <input type="number" id="editCoins" value="${card.coins}">
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="editImage" value="${card.imageUrl || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="editDescription">${card.description || ''}</textarea>
+                </div>
+            `;
+        } else {
+            formHtml = `
+                <div class="form-group">
+                    <label>Challenge Text</label>
+                    <textarea id="editText">${card.text}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="editCategory">
+                        <option value="">None</option>
+                        <option value="tap" ${card.category === 'tap' ? 'selected' : ''}>
+```
