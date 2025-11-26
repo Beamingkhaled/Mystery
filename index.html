@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mystery Pot - Card Game</title>
+    <title>Mystery Pot - Live Viewer</title>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
             width: 100%;
@@ -34,15 +31,15 @@
         }
 
         .pot-display {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             color: #fdb813;
             font-weight: 900;
             letter-spacing: 3px;
             text-transform: uppercase;
             margin-bottom: 80px;
             text-shadow:
-                0 0 10px rgba(0, 0, 0, 0.9),
-                0 8px 20px rgba(0, 0, 0, 0.8);
+                0 0 12px rgba(0,0,0,0.9),
+                0 10px 25px rgba(0,0,0,0.9);
         }
 
         .creature-emoji {
@@ -55,15 +52,15 @@
             background: #fdb813;
             color: #000;
             padding: 14px 40px;
-            border-radius: 10px;
-            font-size: 2rem;
+            border-radius: 12px;
+            font-size: 2.2rem;
             font-weight: 900;
             letter-spacing: 2px;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
             text-transform: uppercase;
             box-shadow:
                 0 4px 0 #000,
-                0 10px 25px rgba(0, 0, 0, 0.8);
+                0 12px 30px rgba(0,0,0,0.9);
         }
 
         .value-row {
@@ -75,52 +72,161 @@
         .coin-icon {
             width: 52px;
             height: 52px;
-            border-radius: 50%;
             background: #fdb813;
+            border-radius: 50%;
             box-shadow:
                 0 4px 0 #000,
-                0 10px 25px rgba(0, 0, 0, 0.8);
+                0 12px 30px rgba(0,0,0,0.9);
         }
 
         .card-value {
             background: #fdb813;
             color: #000;
-            padding: 12px 32px;
-            border-radius: 10px;
+            padding: 12px 34px;
+            border-radius: 12px;
             font-size: 2rem;
             font-weight: 900;
             box-shadow:
                 0 4px 0 #000,
-                0 10px 25px rgba(0, 0, 0, 0.8);
+                0 12px 30px rgba(0,0,0,0.9);
         }
 
         @media (max-width: 480px) {
             .pot-display {
-                font-size: 2.6rem;
+                font-size: 2.8rem;
                 margin-bottom: 60px;
             }
             .creature-emoji {
                 font-size: 4rem;
             }
             .card-name {
-                font-size: 1.6rem;
-                padding: 10px 26px;
-            }
-            .card-value {
                 font-size: 1.7rem;
                 padding: 10px 26px;
             }
+            .card-value {
+                font-size: 1.8rem;
+                padding: 10px 26px;
+            }
+        }
+
+        /* --------- Setup Overlay --------- */
+        .setup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .setup-panel {
+            width: 90%;
+            max-width: 420px;
+            background: #101321;
+            border-radius: 18px;
+            padding: 24px 20px 26px;
+            border: 2px solid rgba(255,255,255,0.12);
+            box-shadow: 0 18px 45px rgba(0,0,0,0.9);
+        }
+
+        .setup-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #fdb813;
+        }
+
+        .setup-sub {
+            font-size: 0.85rem;
+            text-align: center;
+            color: #bbb;
+            margin-bottom: 18px;
+        }
+
+        .setup-group {
+            margin-bottom: 14px;
+        }
+
+        .setup-label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            color: #e0e0e0;
+        }
+
+        .setup-input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .setup-input::placeholder {
+            color: #777;
+        }
+
+        .setup-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .setup-note {
+            font-size: 0.8rem;
+            text-align: center;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        .setup-error {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #ff6b6b;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
+    <!-- Setup overlay (hidden automatically if bin+key already saved) -->
+    <div class="setup-overlay" id="setupOverlay">
+        <div class="setup-panel">
+            <div class="setup-title">JSONBin Setup</div>
+            <div class="setup-sub">ضع الـ Bin ID و الـ Master Key لربط هذا اللايف مع لوحة التحكم</div>
+
+            <div class="setup-group">
+                <label class="setup-label" for="setupBinId">Bin ID</label>
+                <input class="setup-input" id="setupBinId" type="text" placeholder="مثال: 66xxxx..." />
+            </div>
+
+            <div class="setup-group">
+                <label class="setup-label" for="setupApiKey">API Key (Master Key)</label>
+                <input class="setup-input" id="setupApiKey" type="text" placeholder="ابدأ بـ $2b$..." />
+            </div>
+
+            <button class="setup-btn" id="setupSaveBtn">Save & Start</button>
+            <div class="setup-error" id="setupError">يرجى إدخال القيم بشكل صحيح</div>
+            <div class="setup-note">سيتم حفظ القيم في المتصفح (localStorage) حتى لا تعيد كتابتها.</div>
+        </div>
+    </div>
+
+    <!-- Main game viewer -->
     <div class="game-container">
         <div class="pot-display" id="potDisplay">POT 1,000</div>
-
         <div class="creature-emoji" id="creatureEmoji">🦎</div>
-
         <div class="card-name" id="cardName">LIZARD</div>
-
         <div style="margin-top: 24px;">
             <div class="value-row">
                 <div class="coin-icon"></div>
@@ -130,48 +236,91 @@
     </div>
 
     <script>
-        // ===================== JSONBin CONFIG =====================
-        // Option 1: pass ?bin=YOUR_BIN_ID in the URL:
-        //   https://beamingkhaled.github.io/Mystery/?bin=66xxxxxx
-        //
-        // Option 2: hard-code the BIN_ID below and always use /Mystery/
+        let BIN_ID = null;
+        let API_KEY = null;
+        let pollInterval = null;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const BIN_ID_FROM_URL = urlParams.get('bin');
+        const overlay = document.getElementById('setupOverlay');
+        const binInput = document.getElementById('setupBinId');
+        const keyInput = document.getElementById('setupApiKey');
+        const errorDiv = document.getElementById('setupError');
+        const saveBtn = document.getElementById('setupSaveBtn');
 
-        const BIN_ID = BIN_ID_FROM_URL || 'YOUR_BIN_ID_HERE'; // <-- replace this if you want
-        const API_ENDPOINT = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+        // On load: try to use values saved by admin.html
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedBinId = localStorage.getItem('binId');
+            const savedApiKey = localStorage.getItem('apiKey');
 
-        // Poll every 2 seconds
-        fetchGameState();
-        setInterval(fetchGameState, 2000);
+            if (savedBinId && savedApiKey) {
+                BIN_ID = savedBinId;
+                API_KEY = savedApiKey;
+                hideOverlay();
+                startPolling();
+            } else {
+                // Show overlay and let user enter them
+                overlay.style.display = 'flex';
+            }
+        });
 
-        async function fetchGameState() {
-            if (!BIN_ID || BIN_ID === 'YOUR_BIN_ID_HERE') {
-                // Fail silently if user forgot to set the BIN
+        saveBtn.addEventListener('click', () => {
+            const binVal = binInput.value.trim();
+            const keyVal = keyInput.value.trim();
+
+            if (!binVal || !keyVal) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'يرجى إدخال Bin ID و Master Key';
                 return;
             }
 
+            // Save to localStorage (shared with admin.html)
+            localStorage.setItem('binId', binVal);
+            localStorage.setItem('apiKey', keyVal);
+
+            BIN_ID = binVal;
+            API_KEY = keyVal;
+
+            errorDiv.style.display = 'none';
+            hideOverlay();
+            startPolling();
+        });
+
+        function hideOverlay() {
+            overlay.style.display = 'none';
+        }
+
+        function startPolling() {
+            if (!BIN_ID) return;
+
+            // First fetch immediately
+            fetchGameState();
+            // Then every 2 seconds
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(fetchGameState, 2000);
+        }
+
+        async function fetchGameState() {
+            if (!BIN_ID) return;
+
+            const endpoint = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+
             try {
-                const response = await fetch(API_ENDPOINT);
-                if (!response.ok) {
-                    throw new Error('JSONBin request failed');
-                }
+                const response = await fetch(endpoint, {
+                    headers: API_KEY ? { 'X-Master-Key': API_KEY } : {}
+                });
+
+                if (!response.ok) throw new Error('JSONBin request failed');
 
                 const json = await response.json();
                 const data = json.record || {};
 
-                // Update POT
                 if (typeof data.pot === 'number') {
                     document.getElementById('potDisplay').textContent =
                         `POT ${data.pot.toLocaleString()}`;
                 }
 
-                // Update card info
                 if (data.card) {
                     updateCard(data.card);
                 }
-
             } catch (err) {
                 console.error('Error fetching game state:', err);
             }
