@@ -17,99 +17,336 @@
             font-family: -apple-system, BlinkMacSystemFont, "Arial Black", Arial, sans-serif;
             background: #000;
             color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
         }
 
-        .game-container {
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            padding: 30px 10px;
+        /* =============== LAYOUT =============== */
+        .stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
         }
 
+        /* Background theme */
+        .bg-layer {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top, #333 0%, #000 60%);
+            transition: background 0.6s ease;
+        }
+
+        /* Different themes (can later be replaced with actual photos) */
+        .theme-forest .bg-layer {
+            background:
+                radial-gradient(circle at top, rgba(134, 239, 172, 0.4) 0%, transparent 50%),
+                linear-gradient(160deg, #022c22 0%, #052e16 35%, #020617 100%);
+        }
+
+        .theme-desert .bg-layer {
+            background:
+                radial-gradient(circle at top, rgba(253, 224, 171, 0.4) 0%, transparent 45%),
+                linear-gradient(160deg, #7c2d12 0%, #92400e 40%, #1a1308 100%);
+        }
+
+        .theme-mall .bg-layer {
+            background:
+                radial-gradient(circle at top, rgba(244, 114, 182, 0.4) 0%, transparent 45%),
+                linear-gradient(160deg, #020617 0%, #0f172a 45%, #020617 100%);
+        }
+
+        .theme-void .bg-layer {
+            background:
+                radial-gradient(circle at top, rgba(56, 189, 248,0.35) 0%, transparent 40%),
+                linear-gradient(160deg, #020617 0%, #020617 55%, #000 100%);
+        }
+
+        .dark-vignette {
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
+            pointer-events: none;
+        }
+
+        .ui-layer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 18px 10px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* POT at top */
         .pot-display {
-            font-size: 3.8rem;
-            color: #fdb813;
+            font-size: 3.4rem;
+            color: #fbbf24;
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 80px;
             text-shadow:
-                0 0 12px rgba(0,0,0,0.9),
-                0 10px 25px rgba(0,0,0,0.9);
+                0 0 16px rgba(0,0,0,0.9),
+                0 10px 30px rgba(0,0,0,0.95);
+            margin-top: 4vh;
+            margin-bottom: 4vh;
+        }
+
+        /* Cards area */
+        .cards-row {
+            flex: 1;
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .deck-card {
+            width: 160px;
+            height: 230px;
+            border-radius: 18px;
+            border: 6px solid #000;
+            box-shadow: 0 18px 35px rgba(0,0,0,0.9);
+            transform: rotate(-8deg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deck-card-inner {
+            position: absolute;
+            inset: 10px;
+            border-radius: 12px;
+            border: 3px solid rgba(255,255,255,0.16);
+            opacity: 0.8;
+        }
+
+        /* Deck color variants */
+        .deck-blue {
+            background: linear-gradient(135deg, #1d4ed8 0%, #0f172a 100%);
+        }
+        .deck-purple {
+            background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+        }
+        .deck-gold {
+            background: linear-gradient(135deg, #facc15 0%, #a16207 100%);
+        }
+        .deck-toxic {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 40%, #14532d 100%);
+        }
+
+        /* Main card */
+        .main-card {
+            width: 250px;
+            height: 340px;
+            border-radius: 24px;
+            border: 7px solid #000;
+            background: linear-gradient(135deg, #fed7aa 0%, #fb923c 40%, #b45309 100%);
+            box-shadow:
+                0 26px 50px rgba(0,0,0,0.95);
+            position: relative;
+            transform: rotate(6deg);
+            transition: transform 0.4s ease;
+            overflow: hidden;
+        }
+
+        .main-card.flip {
+            animation: flipCard 0.6s ease-in-out;
+        }
+
+        @keyframes flipCard {
+            0%   { transform: rotate(6deg) rotateY(0deg); }
+            50%  { transform: rotate(6deg) rotateY(90deg); }
+            100% { transform: rotate(6deg) rotateY(0deg); }
+        }
+
+        .main-card-inner {
+            position: absolute;
+            inset: 12px;
+            border-radius: 18px;
+            border: 4px solid rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .creature-box {
+            width: 150px;
+            height: 150px;
+            border-radius: 20px;
+            border: 6px solid #000;
+            background: radial-gradient(circle at 30% 20%, #fefce8 0%, #facc15 40%, #92400e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            margin-bottom: 18px;
         }
 
         .creature-emoji {
-            font-size: 5rem;
-            margin-bottom: 40px;
+            font-size: 4.4rem;
+            filter: drop-shadow(0 10px 18px rgba(0,0,0,0.7));
         }
 
         .card-name {
             display: inline-block;
-            background: #fdb813;
+            background: #facc15;
             color: #000;
-            padding: 14px 40px;
-            border-radius: 12px;
-            font-size: 2.2rem;
+            font-size: 1.7rem;
             font-weight: 900;
             letter-spacing: 2px;
-            margin-bottom: 28px;
             text-transform: uppercase;
+            padding: 6px 20px;
+            border-radius: 10px;
             box-shadow:
                 0 4px 0 #000,
-                0 12px 30px rgba(0,0,0,0.9);
+                0 10px 26px rgba(0,0,0,0.8);
+            margin-bottom: 16px;
         }
 
         .value-row {
             display: inline-flex;
             align-items: center;
-            gap: 18px;
+            gap: 14px;
         }
 
         .coin-icon {
-            width: 52px;
-            height: 52px;
-            background: #fdb813;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
+            background: radial-gradient(circle at 30% 25%, #fefce8 0%, #fde047 40%, #b45309 100%);
             box-shadow:
-                0 4px 0 #000,
-                0 12px 30px rgba(0,0,0,0.9);
+                0 3px 0 #000,
+                0 10px 22px rgba(0,0,0,0.9);
         }
 
         .card-value {
-            background: #fdb813;
+            background: #facc15;
             color: #000;
-            padding: 12px 34px;
-            border-radius: 12px;
-            font-size: 2rem;
+            font-size: 1.7rem;
             font-weight: 900;
+            padding: 6px 18px;
+            border-radius: 10px;
             box-shadow:
-                0 4px 0 #000,
-                0 12px 30px rgba(0,0,0,0.9);
+                0 3px 0 #000,
+                0 10px 22px rgba(0,0,0,0.9);
         }
 
-        @media (max-width: 480px) {
-            .pot-display {
-                font-size: 2.8rem;
-                margin-bottom: 60px;
-            }
-            .creature-emoji {
-                font-size: 4rem;
-            }
-            .card-name {
-                font-size: 1.7rem;
-                padding: 10px 26px;
-            }
-            .card-value {
-                font-size: 1.8rem;
-                padding: 10px 26px;
-            }
+        /* Hands area at bottom */
+        .hands-row {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 22px;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        /* --------- Setup Overlay --------- */
+        .hand {
+            width: 160px;
+            height: 150px;
+            position: relative;
+        }
+
+        .hand-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Base palm */
+        .palm {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 135px;
+            height: 95px;
+            border-radius: 65% 65% 45% 45%;
+            border: 5px solid #000;
+            box-shadow: 0 9px 22px rgba(0,0,0,0.9);
+        }
+
+        .fingers {
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+        }
+
+        .finger {
+            width: 26px;
+            border-radius: 15px 15px 4px 4px;
+            border: 5px solid #000;
+            border-bottom: none;
+        }
+
+        /* Mickey gloves */
+        .style-mickey .palm,
+        .style-mickey .finger {
+            background: #fefefe;
+        }
+
+        .style-mickey.left  { transform: translateX(-20%) rotate(-12deg); }
+        .style-mickey.right { transform: translateX(-80%) rotate(12deg); }
+
+        .style-mickey .finger:nth-child(1) { height: 46px; }
+        .style-mickey .finger:nth-child(2) { height: 64px; }
+        .style-mickey .finger:nth-child(3) { height: 54px; }
+
+        /* Ghoul claws */
+        .style-ghoul .palm {
+            background: #0f172a;
+        }
+        .style-ghoul .finger {
+            background: #1f2937;
+            border-radius: 20px 20px 0 0;
+            border-bottom: 10px solid #22c55e;
+        }
+        .style-ghoul .finger:nth-child(1) { height: 60px; }
+        .style-ghoul .finger:nth-child(2) { height: 80px; }
+        .style-ghoul .finger:nth-child(3) { height: 70px; }
+
+        /* Manicure long nails */
+        .style-nails .palm {
+            background: #fce7f3;
+        }
+        .style-nails .finger {
+            background: #fee2e2;
+            border-radius: 18px 18px 0 0;
+            border-bottom: 10px solid #e11d48;
+        }
+        .style-nails .finger:nth-child(1) { height: 58px; }
+        .style-nails .finger:nth-child(2) { height: 78px; }
+        .style-nails .finger:nth-child(3) { height: 68px; }
+
+        /* Robot hands */
+        .style-robot .palm {
+            background: #e5e7eb;
+        }
+        .style-robot .finger {
+            background: #d1d5db;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 8px solid #4b5563;
+        }
+        .style-robot .finger:nth-child(1) { height: 50px; }
+        .style-robot .finger:nth-child(2) { height: 70px; }
+        .style-robot .finger:nth-child(3) { height: 60px; }
+
+        /* Left/right tilt */
+        .hand-left  { transform: rotate(-16deg); }
+        .hand-right { transform: rotate(16deg); }
+
+        /* ============== SETUP OVERLAY (same as before) ============== */
         .setup-overlay {
             position: fixed;
             inset: 0;
@@ -135,7 +372,7 @@
             font-weight: 800;
             text-align: center;
             margin-bottom: 10px;
-            color: #fdb813;
+            color: #fbbf24;
         }
 
         .setup-sub {
@@ -197,10 +434,24 @@
             text-align: center;
             display: none;
         }
+
+        @media (max-width: 768px) {
+            .cards-row {
+                gap: 6px;
+            }
+            .deck-card {
+                width: 130px;
+                height: 200px;
+            }
+            .main-card {
+                width: 220px;
+                height: 310px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Setup overlay (hidden automatically if bin+key already saved) -->
+    <!-- JSONBin setup overlay -->
     <div class="setup-overlay" id="setupOverlay">
         <div class="setup-panel">
             <div class="setup-title">JSONBin Setup</div>
@@ -222,15 +473,58 @@
         </div>
     </div>
 
-    <!-- Main game viewer -->
-    <div class="game-container">
-        <div class="pot-display" id="potDisplay">POT 1,000</div>
-        <div class="creature-emoji" id="creatureEmoji">🦎</div>
-        <div class="card-name" id="cardName">LIZARD</div>
-        <div style="margin-top: 24px;">
-            <div class="value-row">
-                <div class="coin-icon"></div>
-                <div class="card-value" id="cardValue">200</div>
+    <!-- MAIN STAGE -->
+    <div class="stage">
+        <div class="bg-layer"></div>
+        <div class="dark-vignette"></div>
+
+        <div class="ui-layer">
+            <div class="pot-display" id="potDisplay">POT 1,000</div>
+
+            <div class="cards-row">
+                <!-- Deck -->
+                <div class="deck-card deck-blue" id="deckCard">
+                    <div class="deck-card-inner"></div>
+                </div>
+
+                <!-- Main card -->
+                <div class="main-card" id="mainCard">
+                    <div class="main-card-inner">
+                        <div class="creature-box">
+                            <div class="creature-emoji" id="creatureEmoji">🦎</div>
+                        </div>
+                        <div class="card-name" id="cardName">LIZARD</div>
+                        <div class="value-row">
+                            <div class="coin-icon"></div>
+                            <div class="card-value" id="cardValue">200</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hands -->
+            <div class="hands-row" id="handsRow">
+                <div class="hand hand-left">
+                    <div class="hand-inner style-mickey left">
+                        <div class="palm"></div>
+                        <div class="fingers">
+                            <div class="finger"></div>
+                            <div class="finger"></div>
+                            <div class="finger"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hand hand-right">
+                    <div class="hand-inner style-mickey right">
+                        <div class="palm"></div>
+                        <div class="fingers">
+                            <div class="finger"></div>
+                            <div class="finger"></div>
+                            <div class="finger"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -239,6 +533,7 @@
         let BIN_ID = null;
         let API_KEY = null;
         let pollInterval = null;
+        let lastTimestamp = null;
 
         const overlay = document.getElementById('setupOverlay');
         const binInput = document.getElementById('setupBinId');
@@ -246,7 +541,20 @@
         const errorDiv = document.getElementById('setupError');
         const saveBtn = document.getElementById('setupSaveBtn');
 
-        // On load: try to use values saved by admin.html
+        const potDisplay   = document.getElementById('potDisplay');
+        const mainCard     = document.getElementById('mainCard');
+        const cardNameEl   = document.getElementById('cardName');
+        const cardValueEl  = document.getElementById('cardValue');
+        const emojiEl      = document.getElementById('creatureEmoji');
+        const deckCard     = document.getElementById('deckCard');
+        const stage        = document.querySelector('.stage');
+        const handsRow     = document.getElementById('handsRow');
+
+        const THEMES = ['theme-forest', 'theme-desert', 'theme-mall', 'theme-void'];
+        const DECK_STYLES = ['deck-blue', 'deck-purple', 'deck-gold', 'deck-toxic'];
+        const HAND_STYLES = ['style-mickey', 'style-ghoul', 'style-nails', 'style-robot'];
+
+        // On load: try to read saved values (same localStorage as admin.html)
         window.addEventListener('DOMContentLoaded', () => {
             const savedBinId = localStorage.getItem('binId');
             const savedApiKey = localStorage.getItem('apiKey');
@@ -257,7 +565,6 @@
                 hideOverlay();
                 startPolling();
             } else {
-                // Show overlay and let user enter them
                 overlay.style.display = 'flex';
             }
         });
@@ -272,7 +579,6 @@
                 return;
             }
 
-            // Save to localStorage (shared with admin.html)
             localStorage.setItem('binId', binVal);
             localStorage.setItem('apiKey', keyVal);
 
@@ -291,16 +597,13 @@
         function startPolling() {
             if (!BIN_ID) return;
 
-            // First fetch immediately
             fetchGameState();
-            // Then every 2 seconds
             if (pollInterval) clearInterval(pollInterval);
             pollInterval = setInterval(fetchGameState, 2000);
         }
 
         async function fetchGameState() {
             if (!BIN_ID) return;
-
             const endpoint = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
             try {
@@ -313,32 +616,62 @@
                 const json = await response.json();
                 const data = json.record || {};
 
+                // POT
                 if (typeof data.pot === 'number') {
-                    document.getElementById('potDisplay').textContent =
-                        `POT ${data.pot.toLocaleString()}`;
+                    potDisplay.textContent = `POT ${data.pot.toLocaleString()}`;
                 }
 
+                // Card
                 if (data.card) {
-                    updateCard(data.card);
+                    const ts = data.timestamp || null;
+                    const isNewRound = ts && ts !== lastTimestamp;
+                    updateCard(data.card, isNewRound);
+                    if (isNewRound) {
+                        lastTimestamp = ts;
+                        applyRandomVisuals();
+                    }
                 }
             } catch (err) {
                 console.error('Error fetching game state:', err);
             }
         }
 
-        function updateCard(cardData) {
-            const emojiEl = document.getElementById('creatureEmoji');
-            const nameEl = document.getElementById('cardName');
-            const valueEl = document.getElementById('cardValue');
-
+        function updateCard(cardData, animate) {
             emojiEl.textContent = cardData.emoji || '🦎';
-            nameEl.textContent = (cardData.name || 'LIZARD').toUpperCase();
+            cardNameEl.textContent = (cardData.name || 'LIZARD').toUpperCase();
+            cardValueEl.textContent = (cardData.value !== undefined && cardData.value !== null)
+                ? cardData.value
+                : '200';
 
-            if (cardData.value !== undefined && cardData.value !== null) {
-                valueEl.textContent = cardData.value;
-            } else {
-                valueEl.textContent = '200';
+            if (animate) {
+                mainCard.classList.add('flip');
+                setTimeout(() => mainCard.classList.remove('flip'), 600);
             }
+        }
+
+        function applyRandomVisuals() {
+            // Theme
+            THEMES.forEach(t => stage.classList.remove(t));
+            const theme = THEMES[Math.floor(Math.random() * THEMES.length)];
+            stage.classList.add(theme);
+
+            // Deck
+            DECK_STYLES.forEach(d => deckCard.classList.remove(d));
+            const deck = DECK_STYLES[Math.floor(Math.random() * DECK_STYLES.length)];
+            deckCard.classList.add(deck);
+
+            // Hands
+            const leftHandInner  = handsRow.querySelector('.hand-left  .hand-inner');
+            const rightHandInner = handsRow.querySelector('.hand-right .hand-inner');
+
+            HAND_STYLES.forEach(h => {
+                leftHandInner.classList.remove(h);
+                rightHandInner.classList.remove(h);
+            });
+
+            const handStyle = HAND_STYLES[Math.floor(Math.random() * HAND_STYLES.length)];
+            leftHandInner.classList.add(handStyle);
+            rightHandInner.classList.add(handStyle);
         }
     </script>
 </body>
